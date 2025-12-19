@@ -19,7 +19,7 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: Playa123
+      MYSQL_ROOT_PASSWORD: Password123
       MYSQL_DATABASE: joomla_db
       MYSQL_USER: joomla
       MYSQL_PASSWORD: joomla_pass
