@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     networks:
       - joomla_network
-
+# Dario 30cm
   db:
     image: mysql:8.0
     environment:
