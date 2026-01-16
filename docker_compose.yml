@@ -1,17 +1,145 @@
-# docker-compose test
-version: "3.9"
-
 services:
-  app:
-    image: nginx:alpine
+  # =======================
+  # Portainer (Monitoring)
+  # ======0=================
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer_data:/data
+    mem_limit: "300m"
+
+  # =======================
+  # MediaWiki + MariaDB
+  # =======================
+  mediawiki-db:
+    image: mariadb:11
+    container_name: mediawiki-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MW_DB_NAME}
+      MYSQL_USER: ${MW_DB_USER}
+      MYSQL_PASSWORD: ${MW_DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${MW_DB_ROOT_PASS}
+    volumes:
+      - mediawiki_db_data:/var/lib/mysql
+    mem_limit: "700m"
+ 
+  mediawiki:
+    image: mediawiki:1.41
+    container_name: mediawiki
+    restart: unless-stopped
+    depends_on:
+      - mediawiki-db
+    ports:
+      - "8085:80"
+    environment:
+      MW_DB_TYPE: mysql
+      MW_DB_SERVER: mediawiki-db
+      MW_DB_NAME: ${MW_DB_NAME}
+      MW_DB_USER: ${MW_DB_USER}
+      MW_DB_PASSWORD: ${MW_DB_PASS}
+    volumes:
+      - mediawiki_images:/var/www/html/images
+      - ./data/mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
+    mem_limit: "300m"
+ 
+  # (optional) phpMyAdmin für beide MariaDBs (Host auswählbar)
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_ARBITRARY: "1"
+    mem_limit: "300m"
+ 
+  # =======================
+  # Nextcloud + MariaDB
+  # =======================
+
+  nextcloud-db:
+    image: mariadb:11
+    container_name: nextcloud-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_DATABASE: ${NC_DB_NAME}
+      MYSQL_USER: ${NC_DB_USER}
+      MYSQL_PASSWORD: ${NC_DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${NC_DB_ROOT_PASS}
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+    mem_limit: "700m"
+
+  nextcloud:
+    image: nextcloud:stable-apache
+    container_name: nextcloud
+    restart: unless-stopped
+    depends_on:
+      - nextcloud-db
     ports:
       - "8080:80"
+
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_DATABASE: ${NC_DB_NAME}
+      MYSQL_USER: ${NC_DB_USER}
+      MYSQL_PASSWORD: ${NC_DB_PASS}
+    volumes:
+      - nextcloud_data:/var/www/html
+    mem_limit: "300m"
+ 
+  # =======================
+  # Gitea + Postgres
+  # =======================
+
+  gitea-db:
+    image: postgres:16
+    container_name: gitea-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${GITEA_DB_NAME}
+      POSTGRES_USER: ${GITEA_DB_USER}
+      POSTGRES_PASSWORD: ${GITEA_DB_POSTGRES_PASS}
+    volumes:
+      - gitea_db_data:/var/lib/postgresql/data
+    mem_limit: "700m"
+ 
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    restart: unless-stopped
     depends_on:
-      - db
-    
-    db:
-     image: postgres:15
-     environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: testdb
+      - gitea-db
+    ports:
+      - "3000:3000"   # Web UI
+      - "2222:22"     # Git via SSH
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=gitea-db:5432
+      - GITEA__database__NAME=${GITEA_DB_NAME}
+      - GITEA__database__USER=${GITEA_DB_USER}
+      - GITEA__database__PASSWD=${GITEA_DB_POSTGRES_PASS}
+    volumes:
+      - gitea_data:/data
+    mem_limit: "300m"
+ 
+volumes:
+  portainer_data:
+  mediawiki_db_data:
+  mediawiki_images:
+  nextcloud_db_data:
+  nextcloud_data:
+  gitea_db_data:
+  gitea_data:
+ 
