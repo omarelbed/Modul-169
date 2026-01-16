@@ -12,7 +12,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     mem_limit: "300m"
-    memswap_limit: "300"
+    memswap_limit: "300m"
 
   # =======================
   # MediaWiki + MariaDB
@@ -29,7 +29,7 @@ services:
     volumes:
       - mediawiki_db_data:/var/lib/mysql
     mem_limit: "700m"
-    memswap_limit: "700"
+    memswap_limit: "700m"
 
   mediawiki:
     image: mediawiki:1.41
@@ -47,12 +47,13 @@ services:
       MW_DB_PASSWORD: ${MW_DB_PASS}
     volumes:
       - mediawiki_images:/var/www/html/images
-      # LocalSettings.php wird NACH dem Setup hier abgelegt (siehe Schritt 6)
       - ./data/mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
     mem_limit: "300m"
-    memswap_limit: "300"
+    memswap_limit: "300m"
 
-  # (optional) phpMyAdmin für beide MariaDBs (Host auswählbar)
+  # =======================
+  # phpMyAdmin
+  # =======================
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: phpmyadmin
@@ -62,7 +63,7 @@ services:
     environment:
       PMA_ARBITRARY: "1"
     mem_limit: "300m"
-    memswap_limit: "300"
+    memswap_limit: "300m"
 
   # =======================
   # Nextcloud + MariaDB
@@ -79,10 +80,10 @@ services:
     volumes:
       - nextcloud_db_data:/var/lib/mysql
     mem_limit: "700m"
-    memswap_limit: "700"
+    memswap_limit: "700m"
 
   nextcloud:
-    image: nextcloud:28-apache
+    image: nextcloud:stable-apache
     container_name: nextcloud
     restart: unless-stopped
     depends_on:
@@ -97,37 +98,45 @@ services:
     volumes:
       - nextcloud_data:/var/www/html
     mem_limit: "300m"
-    memswap_limit: "300"
+    memswap_limit: "300m"
 
   # =======================
-  # Gogs + Postgres
+  # Gitea + PostgreSQL
   # =======================
-  gogs-db:
+  gitea-db:
     image: postgres:16
-    container_name: gogs-db
+    container_name: gitea-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${GOGS_DB_NAME}
-      POSTGRES_USER: ${GOGS_DB_USER}
-      POSTGRES_PASSWORD: ${GOGS_DB_POSTGRES_PASS}
+      POSTGRES_DB: ${GITEA_DB_NAME}
+      POSTGRES_USER: ${GITEA_DB_USER}
+      POSTGRES_PASSWORD: ${GITEA_DB_POSTGRES_PASS}
     volumes:
-      - gogs_db_data:/var/lib/postgresql/data
+      - gitea_db_data:/var/lib/postgresql/data
     mem_limit: "700m"
-    memswap_limit: "700"
+    memswap_limit: "700m"
 
-  gogs:
-    image: gogs/gogs:latest
-    container_name: gogs
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
     restart: unless-stopped
     depends_on:
-      - gogs-db
+      - gitea-db
     ports:
       - "3000:3000"   # Web UI
       - "2222:22"     # Git via SSH
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=gitea-db:5432
+      - GITEA__database__NAME=${GITEA_DB_NAME}
+      - GITEA__database__USER=${GITEA_DB_USER}
+      - GITEA__database__PASSWD=${GITEA_DB_POSTGRES_PASS}
     volumes:
-      - gogs_data:/data
+      - gitea_data:/data
     mem_limit: "300m"
-    memswap_limit: "300"
+    memswap_limit: "300m"
 
 volumes:
   portainer_data:
@@ -135,5 +144,5 @@ volumes:
   mediawiki_images:
   nextcloud_db_data:
   nextcloud_data:
-  gogs_db_data:
-  gogs_data:
+  gitea_db_data:
+  gitea_data:
