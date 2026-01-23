@@ -69,7 +69,7 @@ services:
   # Nextcloud + MariaDB
   # =======================
   nextcloud-db:
-    image: mariadb:11
+    image: mariadb:11.4
     container_name: nextcloud-db
     restart: unless-stopped
     environment:
