@@ -45,9 +45,9 @@ services:
       MW_DB_NAME: ${MW_DB_NAME}
       MW_DB_USER: ${MW_DB_USER}
       MW_DB_PASSWORD: ${MW_DB_PASS}
-    volumes:
-      - ../mediawiki/mediawiki_images:/var/www/html/images
-      - ../mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
+#    volumes:
+#      - ../mediawiki/mediawiki_images:/var/www/html/images
+#      - ../mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
     mem_limit: "300m"
     memswap_limit: "300m"
 
