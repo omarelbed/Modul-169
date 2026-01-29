@@ -33,6 +33,12 @@
 - Repo fortlaufend versioniert (Compose + Doku + Anpassungen)
 
 ## Test und Absicherung / 28.01.2026 - 29.01.2026
+- Tests erstellen 
+- Tests ausführen
+- Persistenz durch Neustart der Container prüfen
 
 ## Abschluss und Abgabe / 30.01.2026
+- Letzter feinschliff Dokumentation
+- Abgabe bis 30.01.2026 - 23:59 Uhr
+
 
