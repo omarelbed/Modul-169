@@ -136,6 +136,13 @@ Das Code-Versionierungssystem Gitea wurde mit einer PostgreSQL-Datenbank install
 ![Gitea Dashboard](../bilder/gitea_dashboard.png)
 
 
+## 30.01.2026 – Technische Dokumentation und Konfigurationsabschluss
+
+In diesem Arbeitsschritt wurden die projektrelevanten Dokumente technisch finalisiert. Das README wurde so angepasst, dass es die Docker-Compose-basierte Infrastruktur beschreibt, inklusive der eingesetzten Services, der Portkonfiguration sowie des Betriebs der Container mittels `docker compose`.
+
+Das Sicherheitskonzept wurde ergänzt und konkretisiert. Dabei wurde festgehalten, dass sicherheitsrelevante Konfigurationsparameter (z. B. Datenbank-Zugangsdaten) ausschliesslich über Umgebungsvariablen aus der `.env`-Datei eingebunden werden. Das Docker-Compose-File enthält keine fest codierten Passwörter und bleibt dadurch portabel und versionsfähig.
+
+Alle Änderungen wurden anschliessend mittels Git versioniert. Die Commit-Historie dokumentiert den technischen Fortschritt und stellt die Nachvollziehbarkeit der umgesetzten Infrastruktur sicher.
 
 
 
