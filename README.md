@@ -37,139 +37,119 @@ Die wichtigsten Dateien und Verzeichnisse des Projekts sind:
 - `sicherheitskonzept.md` – Sicherheitskonzept
 
 ## Installation und Start
-Voraussetzungen:
+
+### Voraussetzungen
 
 - Docker
 - Docker Compose
-- Directory wählen für das man keine root rechte benötigt und ein Directory das nicht Synchronisiert wird. (Dient der sichherheit des hosts.)
+- Ein Verzeichnis, das keine Root-Rechte benötigt
+- Ein Verzeichnis, das nicht synchronisiert wird (z. B. kein Cloud-Sync), zur Erhöhung der Sicherheit des Hosts
 
+### Projekt klonen
 
--  Projekt klonen in einen Pfad der nicht höhere rechte braucht
+In ein geeignetes Verzeichnis wechseln:
 
-```bash
 cd /gewünschter/repo/Pfad
-```
 
-- Repo klonen
+Repository klonen:
 
-```bash
-user@dungeon:~/gewünschter/repo/Pfad/$git clone https://github.com/omarelbed/Modul-169.git
-```
+git clone https://github.com/omarelbed/Modul-169.git
 
-#### Projekt starten:
+### Projekt starten
 
-.env erstellen mit `cp` Befehl aus vorlage
-```bash
+.env-Datei anhand der Vorlage erstellen:
+
 cp .env.example .env
-```
 
-.env befüllen
+.env-Datei mit den benötigten Zugangsdaten befüllen:
 
-```bash
-# MediaWiki – MariaDB
-MW_DB_NAME=mediawiki
-MW_DB_USER=mwuser
-MW_DB_PASS=CHANGE_ME_MW_DB_PASS
-MW_DB_ROOT_PASS=CHANGE_ME_MW_ROOT_PASS
+# MediaWiki – MariaDB  
+MW_DB_NAME=mediawiki  
+MW_DB_USER=mwuser  
+MW_DB_PASS=CHANGE_ME_MW_DB_PASS  
+MW_DB_ROOT_PASS=CHANGE_ME_MW_ROOT_PASS  
 
+# Nextcloud – MariaDB  
+NC_DB_NAME=nextcloud  
+NC_DB_USER=ncuser  
+NC_DB_PASS=CHANGE_ME_NC_DB_PASS  
+NC_DB_ROOT_PASS=CHANGE_ME_NC_ROOT_PASS  
 
-# Nextcloud – MariaDB
-NC_DB_NAME=nextcloud
-NC_DB_USER=ncuser
-NC_DB_PASS=CHANGE_ME_NC_DB_PASS
-NC_DB_ROOT_PASS=CHANGE_ME_NC_ROOT_PASS
+# Gitea – PostgreSQL  
+GITEA_DB_NAME=gitea  
+GITEA_DB_USER=gitea  
+GITEA_DB_POSTGRES_PASS=CHANGE_ME_GITEA_POSTGRES_PASS  
 
+Container starten:
 
-# Gitea – PostgreSQL
-GITEA_DB_NAME=gitea
-GITEA_DB_USER=gitea
-GITEA_DB_POSTGRES_PASS=CHANGE_ME_GITEA_POSTGRES_PASS
-```
-
-```bash
 docker compose up -d
-```
 
-### Einzelne Container Konfigurieren
+## Einzelne Container konfigurieren
 
+### MediaWiki
 
-#### MediaWiki
+Es wird empfohlen, mit MediaWiki zu beginnen, da die Erstkonfiguration am längsten dauert und einen Neustart der Container erfordert.
 
-Am besten fängt man mit MediaWiki an weil dies am längsten dauert und einen neustart erfordert.
+- Verbindung zur Weboberfläche herstellen:  
+  http://localhost:8085
 
-- Mit `http://localhost:8085` auf MediaWiki Verbinden.
+- Installation durchführen und dabei die Datenbank-Zugangsdaten aus der .env-Datei verwenden
 
-- Verbindung und Konfiguration mit Passwörtern und Usernamen aus .env herstellen
+- Nach Abschluss der Installation die Datei LocalSettings.php herunterladen  
+  (wenn möglich direkt im Repository oder im mediawiki-Ordner ablegen)
 
-- LocalSettings.php herunterladen (Wenn möglich direkt in repo oder in mediawiki Ordner ablegen)
+- LocalSettings.php in den mediawiki-Ordner verschieben (falls sie im Repository liegt):
 
-- LocalSettings.php in mediawiki Ordner verschieben
-
-```bash
-# Wenn in Repo Ordner
 sudo cp LocalSettings.php ../mediawiki/LocalSettings.php
-```
 
-- Inhaber und gruppe ändern auf LocalSettings.php
+- Eigentümer und Gruppe der Datei anpassen (UID/GID des MediaWiki-Containers):
 
-```bash
 sudo chown 999:999 LocalSettings.php
-```
 
-- Rechte auf 750 setzen
-```bash
+- Dateiberechtigungen setzen:
+
 sudo chmod 750 LocalSettings.php
-```
-- mediawiki Volumen in  docker-compose.yml entkommentieren und speichern
 
-```bash
-docker compose down
-```
-```bash
+- MediaWiki-Volume im docker-compose.yml aktivieren (entkommentieren) und Container neu starten:
+
+docker compose down  
 docker compose up -d
-```
-Ab jetzt ist die konfiguration eingelesen in MediaWiki und sollte nicht mehr flüchtig sein bei einem neustart.
 
+Ab diesem Zeitpunkt ist die MediaWiki-Konfiguration persistent und bleibt auch nach Neustarts erhalten.
 
-#### Gitea Konfiguration
+### Gitea Konfiguration
 
+- Verbindung zur Weboberfläche herstellen:  
+  http://localhost:3000
 
-Auf Gitea verbinden mit `http://localhost:3000`
+- Initialkonfiguration durchführen:
+  - Dropdown-Menü für die Erstellung eines Administrator-Accounts öffnen
+  - Benötigte Informationen eingeben
+  - Unten auf den blauen Bestätigungsbutton klicken
 
+Nach Abschluss der Installation wird automatisch die Startseite geöffnet.
 
-- Konfigurieren
-- Dropdown öffnen für erstellung von Administratoren account erstellung
-- Informationen eingeben und Unten in der mitte auf blauen Button clicken.
+### Portainer
 
-Fertig die installation sollte automatisch die Homepage öffnen.
+- Verbindung zur Weboberfläche herstellen:  
+  http://localhost:9000
 
+- Falls zu Beginn eine leere (weisse) Seite angezeigt wird, Container neu starten:
 
-#### Portainer
-
-Auf Portainer verbinden mit `http:localhost:9000`
-
-Wennam anfang eine weisse Website erscheint muss der Portainer neugestartet werden.
-
-```bash
 docker restart portainer
-```
 
-- Website refreshen
+- Webseite aktualisieren
+- Administrator-Passwort festlegen
+- Auf "Create User" klicken
+- Im Dashboard auf "Local" (Docker-Icon) klicken, um die lokale Docker-Umgebung zu verbinden
 
-- Wenn das login Fenster erscheint ein Passwort anlegen.
+In der Übersicht sollte anschliessend ein Stack mit mehreren Containern sichtbar sein.
 
-- create User Klicken
+### Nextcloud
 
-- Sobald man im Dashboard ist auf "Local"(Docker Icon) Klicken verbinden und in der Übersicht sollte 1 Stack mit 7 containern erscheinen.
+- Verbindung zur Weboberfläche herstellen:  
+  http://localhost:8080
 
-
-#### Nextcloud
-
-Auf Nextcloud verbinden mit `http:localhost:8080`
-
-- Administrator User und Passwort anlegen
-
-- "Installieren" Klicken
-
-- Apps installieren muss man nicht kann man aber
-
+- Administrator-Benutzer und Passwort anlegen
+- Auf "Installieren" klicken
+- Zusätzliche Apps können optional installiert werden
