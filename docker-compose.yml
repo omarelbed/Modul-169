@@ -50,21 +50,7 @@ services:
 #      - ../mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
     mem_limit: "300m"
     memswap_limit: "300m"
-
-  # =======================
-  # phpMyAdmin
-  # =======================
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: phpmyadmin
-    restart: unless-stopped
-    ports:
-      - "8081:80"
-    environment:
-      PMA_ARBITRARY: "1"
-    mem_limit: "300m"
-    memswap_limit: "300m"
-
+    
   # =======================
   # Nextcloud + MariaDB
   # =======================
