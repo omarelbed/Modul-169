@@ -112,6 +112,7 @@ services:
       POSTGRES_DB: ${GITEA_DB_NAME}
       POSTGRES_USER: ${GITEA_DB_USER}
       POSTGRES_PASSWORD: ${GITEA_DB_POSTGRES_PASS}
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ../gitea/gitea_db_data:/var/lib/postgresql/data
     mem_limit: "700m"
