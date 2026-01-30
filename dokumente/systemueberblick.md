@@ -146,7 +146,7 @@ Diese Limits sind im Docker-Compose-File konfiguriert und können über Portaine
 Die Sicherheitsaspekte des Systems basieren auf folgenden Grundsätzen:
 
 - Keine Passwörter im Docker-Compose-File
-- Verwendung von `.env`-Dateien für sensible Konfigurationswerte
+- Verwendung von .env-Dateien für sensible Konfigurationswerte
 - Datenbanken nicht direkt von aussen erreichbar
 - Zugriff nur über definierte Ports
 - Trennung interner und externer Kommunikation
