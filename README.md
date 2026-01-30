@@ -41,8 +41,24 @@ Voraussetzungen:
 
 - Docker
 - Docker Compose
+- Directory für das man keine root rechte benötigt (Dient der sichherheit des hosts am besten unter home oder custom user Repo klonen)
+- 
+
+Projekt klonen
+
+```bash
+cd /gewünschter/repo/Pfad
+```
+
+
+
 
 Projekt starten:
 
+
+
+
 ```bash
 docker compose up -d
+```
+
