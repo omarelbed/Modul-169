@@ -50,7 +50,7 @@ services:
 #      - ../mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
     mem_limit: "300m"
     memswap_limit: "300m"
-    
+
   # =======================
   # Nextcloud + MariaDB
   # =======================

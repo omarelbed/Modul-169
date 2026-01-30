@@ -34,7 +34,9 @@ Das erste Skelett der Ordnerstruktur wurde erstellt.
 **Beschreibung:**
 
 - Docker Compose mit den neuen erlertnet Memory Limit bearbeitet 
-- Diverse Optimierungen 
+- Diverse Optimierungen docker-compose.yml
+- Testen der Container Funktionen und Verzeichnis Struktur nach `docker compose up -d` Befehl
+- Trial & Error bei Container Funktion
 
 ## 24.01.2026 - Docker Compose finalisiert
 
@@ -42,7 +44,10 @@ Das erste Skelett der Ordnerstruktur wurde erstellt.
 
 **Beschreibung:**
 
-
+- Finalisierung docker-compose.yml
+- Testing Container build und Funktion
+- Ablagestruktur Finalisiert
+- Korrekturen Naming
 
 ## 28.01.2026 - Docker Compose ausführen und aufsetzen / Testfälle definieren und dokumentieren
 
