@@ -25,12 +25,11 @@ Im Projekt wurden folgende Anforderungen umgesetzt:
 
 Eine detaillierte Architekturübersicht befindet sich im Dokument `systemueberblick.md`.
 
-## Verzeichnisstruktur
+## Inhalt des Repository
 Die wichtigsten Dateien und Verzeichnisse des Projekts sind:
 
 - `docker-compose.yml` – Definition der gesamten Infrastruktur
 - `.env.example` – Beispielkonfiguration der Umgebungsvariablen
-- `.env` – Lokale Konfiguration (nicht versioniert)
 - `README.md` – Projektübersicht
 - `arbeitsplan.md` – Arbeits- und Zeitplanung
 - `arbeitsjournal.md` – Chronologisches Arbeitsjournal
